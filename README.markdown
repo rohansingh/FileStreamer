@@ -40,7 +40,7 @@ need more memory, while smaller slice sizes will use more CPU.
 
 ### Stream functions
 The available stream functions correspond to each of the read functions in
-the FileReader API (https://developer.mozilla.org/en/DOM/FileReader). Each
+the [FileReader API](https://developer.mozilla.org/en/DOM/FileReader). Each
 function accepts the same arguments as its corresponding FileReader function,
 with the addition of a callback.
 
