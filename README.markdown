@@ -38,22 +38,22 @@ Since the File API is relatively new and implementations vary across
 browsers, I can't tell you what slice size to use. Large slice sizes will
 need more memory, while smaller slice sizes will use more CPU.
 
-## Stream functions
+### Stream functions
 The available stream functions correspond to each of the read functions in
 the FileReader API (https://developer.mozilla.org/en/DOM/FileReader). Each
 function accepts the same arguments as its corresponding FileReader function,
 with the addition of a callback.
 
-  - streamAsArrayBuffer(file, callback)
-  - streamAsBinaryString(file, callback)
-  - streamAsDataURL(file, callback)
-  - streamAsText(file, encoding, callback)
+  - `streamAsArrayBuffer(file, callback)`
+  - `streamAsBinaryString(file, callback)`
+  - `streamAsDataURL(file, callback)`
+  - `streamAsText(file, encoding, callback)`
 
-## Work function
+### Work function
 The work function (callback) receives two arguments:
 
-  1. event: the ProgressEvent from FileReader.onloadend.
-  2. eof: true if this is the last slice in the file, otherwise false.
+  1. `event`: the `ProgressEvent` from `FileReader.onloadend`.
+  2. `eof`: `true` if this is the last slice in the file, otherwise `false`.
 
 The callback is guaranteed to be called sequentially for each file slice. If
 the callback returns false, streaming will stop. Otherwise, streaming will
