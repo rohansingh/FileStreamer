@@ -60,7 +60,7 @@ the callback returns `false`, streaming will stop. Otherwise, streaming will
 continue to the next slice.
 
 ### Using FileReaderSync
-By default, FileStreamer uses a [FileReader](https://developer.mozilla.org/en/DOM/FileReader)
+By default, `FileStreamer` uses a [FileReader](https://developer.mozilla.org/en/DOM/FileReader)
 under the covers. In some cases, you may want to use a [FileReaderSync](https://developer.mozilla.org/en/DOM/FileReaderSync)
 instead. To do this, pass `true` for the second argument to the constructor:
 
