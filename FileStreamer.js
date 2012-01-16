@@ -76,8 +76,9 @@
  *
  */
 
-var FileStreamer = function (sliceSize) {
+var FileStreamer = function (sliceSize, useFileReaderSync) {
   this.sliceSize = sliceSize;
+  this.useFileReaderSync = useFileReaderSync;
 }
 
 FileStreamer.prototype.streamAsBinaryString = function (file, callback) {
@@ -97,7 +98,14 @@ FileStreamer.prototype.streamAsDataURL = function (file, callback) {
 }
 
 FileStreamer.prototype.streamFile = function (file, callback, readType, encoding) {
-  var fileReader = new FileReader();
+  var fileReader;
+  if (this.useFileReaderSync) {
+    fileReader = new FileReaderSync();
+  }
+  else {
+    fileReader = new FileReader();
+  }
+
   var position = 0;
   var eof = false;
 
@@ -135,14 +143,22 @@ FileStreamer.prototype.streamFile = function (file, callback, readType, encoding
     var blob = sliceFunc.apply(file, [position, end]);
     position = end;
 
-    readFunc.apply(fileReader, [blob]);
-  };
+    var result =  readFunc.apply(fileReader, [blob]);
 
-  fileReader.onloadend = function (event) {
-    if (callback.apply(file, [event, eof]) !== false) {
+    // If we are using FileReaderSync, return the result of the read
+    // to the user's callback, and then start reading the next slice.
+    if (that.useFileReaderSync && callback.apply(file, [result, eof]) !== false) {
       doRead();
     }
   };
+
+  if (!this.useFileReaderSync) {
+    fileReader.onloadend = function (event) {
+      if (callback.apply(file, [event, eof]) !== false) {
+        doRead();
+      }
+    };
+  }
 
   doRead();
 }
