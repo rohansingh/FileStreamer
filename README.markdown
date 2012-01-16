@@ -56,6 +56,6 @@ The work function (callback) receives two arguments:
   2. `eof`: `true` if this is the last slice in the file, otherwise `false`.
 
 The callback is guaranteed to be called sequentially for each file slice. If
-the callback returns false, streaming will stop. Otherwise, streaming will
+the callback returns `false`, streaming will stop. Otherwise, streaming will
 continue to the next slice.
 
