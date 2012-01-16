@@ -1,7 +1,7 @@
 FileStreamer
 ============
 
-Use FileStreamer when you need to work on sequential slices of a file with the
+Use `FileStreamer` when you need to work on sequential slices of a file with the
 [HTML5 File API](http://www.w3.org/TR/FileAPI/). By working on slices, you can
 work on a large file without loading the entire file into memory at once.
 
@@ -29,7 +29,7 @@ demonstrates the basic usage.
 
 Usage
 -----
-To construct a FileStreamer, specify the desired slice size in bytes. For
+To construct a `FileStreamer`, specify the desired slice size in bytes. For
 example:
 
     var fs = new FileStreamer(4 * 1024 * 1024); // 4MB slice size
@@ -41,7 +41,7 @@ need more memory, while smaller slice sizes will use more CPU.
 ### Stream functions
 The available stream functions correspond to each of the read functions in
 the [FileReader API](https://developer.mozilla.org/en/DOM/FileReader). Each
-function accepts the same arguments as its corresponding FileReader function,
+function accepts the same arguments as its corresponding `FileReader` function,
 with the addition of a callback.
 
   - `streamAsArrayBuffer(file, callback)`
@@ -58,4 +58,24 @@ The work function (callback) receives two arguments:
 The callback is guaranteed to be called sequentially for each file slice. If
 the callback returns `false`, streaming will stop. Otherwise, streaming will
 continue to the next slice.
+
+### Using FileReaderSync
+By default, FileStreamer uses a [FileReader](https://developer.mozilla.org/en/DOM/FileReader)
+under the covers. In some cases, you may want to use a [FileReaderSync](https://developer.mozilla.org/en/DOM/FileReaderSync)
+instead. To do this, pass `true` for the second argument to the constructor:
+
+    var fs = new FileStreamer(4 * 1024 * 1024, true);
+
+When using a `FileReaderSync`, your work function will receive these arguments:
+
+  1. `result`: the data read from the `FileReaderSync`.
+  2. `eof`: same as with normal usage.
+
+None of the other API's change. Though a `FileReaderSync` will be used under the
+covers, `FileStreamer` itself will not become synchronous; you must still supply
+a callback.
+
+The usual use case for this is when using `FileStreamer` in a [web worker](https://developer.mozilla.org/En/Using_web_workers).
+As of Firefox 9, the `FileReaderSync` interface is available to a web worker,
+but the `FileReader` is not.
 
