@@ -1,0 +1,126 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>FileStreamer by rohansingh</title>
+    
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <h1>FileStreamer</h1>
+        <p>Use FileStreamer when you need to work on sequential slices of a file with the HTML5 File API.</p>
+        <p class="view"><a href="https://github.com/rohansingh/FileStreamer">View the Project on GitHub <small>rohansingh/FileStreamer</small></a></p>
+        <ul>
+          <li><a href="https://github.com/rohansingh/FileStreamer/zipball/master">Download <strong>ZIP File</strong></a></li>
+          <li><a href="https://github.com/rohansingh/FileStreamer/tarball/master">Download <strong>TAR Ball</strong></a></li>
+          <li><a href="https://github.com/rohansingh/FileStreamer">Fork On <strong>GitHub</strong></a></li>
+        </ul>
+      </header>
+      <section>
+        <h1>FileStreamer</h1>
+
+<p>Use <code>FileStreamer</code> when you need to work on sequential slices of a file with the
+<a href="http://www.w3.org/TR/FileAPI/">HTML5 File API</a>. By working on slices, you can
+work on a large file without loading the entire file into memory at once.</p>
+
+<h2>Example</h2>
+
+<p>Here is a contrived example of calculating the length of a file:</p>
+
+<pre><code>var someFile = document.getElementById('fileInput').files[0];
+
+var fileLength = 0;
+var myWorkFunc = function (event, eof) {
+  binaryString = event.target.result;
+  fileLength += binaryString.length;
+
+  if (eof) {
+    alert('The length of this file in bytes is: ' + fileLength);
+  }
+}
+
+var fs = new FileStreamer(4 * 1024 * 1024);
+fs.streamAsBinaryString(someFile, myWorkFunc);
+</code></pre>
+
+<p>This is a contrived example since you could just use <code>someFile.size</code>, but it
+demonstrates the basic usage.</p>
+
+<h2>Usage</h2>
+
+<p>To construct a <code>FileStreamer</code>, specify the desired slice size in bytes. For
+example:</p>
+
+<pre><code>var fs = new FileStreamer(4 * 1024 * 1024); // 4MB slice size
+</code></pre>
+
+<p>Since the File API is relatively new and implementations vary across
+browsers, I can't tell you what slice size to use. Large slice sizes will
+need more memory, while smaller slice sizes will use more CPU.</p>
+
+<h3>Stream functions</h3>
+
+<p>The available stream functions correspond to each of the read functions in
+the <a href="https://developer.mozilla.org/en/DOM/FileReader">FileReader API</a>. Each
+function accepts the same arguments as its corresponding <code>FileReader</code> function,
+with the addition of a callback.</p>
+
+<ul>
+<li><code>streamAsArrayBuffer(file, callback)</code></li>
+<li><code>streamAsBinaryString(file, callback)</code></li>
+<li><code>streamAsDataURL(file, callback)</code></li>
+<li><code>streamAsText(file, encoding, callback)</code></li>
+</ul><h3>Work function</h3>
+
+<p>The work function (callback) receives two arguments:</p>
+
+<ol>
+<li>
+<code>event</code>: the <code>ProgressEvent</code> from <code>FileReader.onloadend</code>.</li>
+<li>
+<code>eof</code>: <code>true</code> if this is the last slice in the file, otherwise <code>false</code>.</li>
+</ol><p>The callback is guaranteed to be called sequentially for each file slice. If
+the callback returns <code>false</code>, streaming will stop. Otherwise, streaming will
+continue to the next slice.</p>
+
+<h3>Using FileReaderSync</h3>
+
+<p>By default, <code>FileStreamer</code> uses a <a href="https://developer.mozilla.org/en/DOM/FileReader">FileReader</a>
+under the covers. In some cases, you may want to use a <a href="https://developer.mozilla.org/en/DOM/FileReaderSync">FileReaderSync</a>
+instead. To do this, pass <code>true</code> for the second argument to the constructor:</p>
+
+<pre><code>var fs = new FileStreamer(4 * 1024 * 1024, true);
+</code></pre>
+
+<p>When using a <code>FileReaderSync</code>, your work function will receive these arguments:</p>
+
+<ol>
+<li>
+<code>result</code>: the data read from the <code>FileReaderSync</code>.</li>
+<li>
+<code>eof</code>: same as with normal usage.</li>
+</ol><p>None of the other API's change. Though a <code>FileReaderSync</code> will be used under the
+covers, <code>FileStreamer</code> itself will not become synchronous; you must still supply
+a callback.</p>
+
+<p>The usual use case for this is when using <code>FileStreamer</code> in a <a href="https://developer.mozilla.org/En/Using_web_workers">web worker</a>.
+As of Firefox 9, the <code>FileReaderSync</code> interface is available to a web worker,
+but the <code>FileReader</code> is not.</p>
+      </section>
+      <footer>
+        <p>This project is maintained by <a href="https://github.com/rohansingh">rohansingh</a></p>
+        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
+      </footer>
+    </div>
+    <script src="javascripts/scale.fix.js"></script>
+    
+  </body>
+</html>
