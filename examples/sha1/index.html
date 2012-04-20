@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>SHA1 FileStreamer example</title>
+
+    <script type="text/javascript" src="../../FileStreamer.js"></script>
+
+    <script type="text/javascript" src="sha1.js"></script>
+    <script type="text/javascript" src="sha1_lib.js"></script>
+    <script type="text/javascript" src="sha1_stream.js"></script>
+</head>
+<body>
+    <p>
+        <input type="file" id="fileInput" name="fileInput" />
+        <a id="hashButton" href="#">Hash</a>
+    </p>
+
+    <p>
+        SHA1: <span id="sha1Result"></span>
+    </p>
+
+    <script type="text/javascript">
+
+    var input = document.getElementById('fileInput');
+    var button = document.getElementById('hashButton');
+    var result = document.getElementById('sha1Result');
+
+    button.onclick = function () {
+        Sha1File.getSha1Hash(input.files[0], function (hash) {
+            result.innerText = hash;
+        });
+    };
+
+    </script>
+</body>
+</html>

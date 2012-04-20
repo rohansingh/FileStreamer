@@ -27,6 +27,9 @@ Here is a contrived example of calculating the length of a file:
 This is a contrived example since you could just use `someFile.size`, but it
 demonstrates the basic usage.
 
+You can find more examples, such as calculating a SHA1 hash on a local file,
+in the examples directory.
+
 Usage
 -----
 To construct a `FileStreamer`, specify the desired slice size in bytes. For
